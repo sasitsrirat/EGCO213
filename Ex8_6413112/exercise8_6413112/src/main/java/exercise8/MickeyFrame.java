@@ -83,9 +83,10 @@ public class MickeyFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                if (!MickeyMove)
+                //if (!MickeyMove)
+                if(mickeyLabel.isWalk() == false)
                 {
-                    MickeyMove = true;
+                    mickeyLabel.setWalk(true);
                     setMickeyThread();
                 }   
             }
@@ -99,9 +100,9 @@ public class MickeyFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                if (MickeyMove)
+                if (mickeyLabel.isWalk() == true)
                 {
-                    MickeyMove = false;
+                    mickeyLabel.setWalk(false);
                     setMickeyThread();
                 }   
             }
@@ -145,6 +146,41 @@ public class MickeyFrame extends JFrame {
         for (int i = 0; i < 2; i++) {
             bgroup.add(tb[i]);
         }
+
+        /*tb[0].addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                JRadioButton inputSide = (JRadioButton) e.getItem();
+                if(inputSide.isSelected()){
+                    tb[0].setSelected(true);
+                    tb[1].setSelected(false);
+                    mickeyLabel.turnLeft();
+                } else {
+                    if(!tb[1].isSelected()) {
+                        //MickeyLeft = true;
+                        mickeyLabel.turnLeft();
+                        tb[0].setSelected(true);
+                    }
+                }
+            }
+        });
+        tb[1].addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                JRadioButton inputSide = (JRadioButton) e.getItem();
+                if(inputSide.isSelected()){
+                    tb[0].setSelected(false);
+                    tb[1].setSelected(true);
+                    mickeyLabel.turnRight();
+                } else {
+                    if(!tb[0].isSelected()) {
+                        mickeyLabel.turnRight();
+                        tb[1].setSelected(true);
+                    }
+                }
+            }
+        });*/
+
 
         // (6) Add ActionListener (anonymous class) to moreButton
         // - Create a new itemThread
