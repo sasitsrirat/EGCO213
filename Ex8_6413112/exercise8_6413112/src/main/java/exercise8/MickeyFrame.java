@@ -121,7 +121,7 @@ public class MickeyFrame extends JFrame {
                 String Input = (String) e.getItem();
                 if (Input.equals("fast"))
                 {
-                    mickeyLabel.setSpeed(600);
+                    mickeyLabel.setSpeed(100);
                 }
                 else if (Input.equals("medium"))
                 {
@@ -129,7 +129,7 @@ public class MickeyFrame extends JFrame {
                 }
                 else if (Input.equals("slow"))
                 {
-                    mickeyLabel.setSpeed(1300);
+                    mickeyLabel.setSpeed(2000);
                 }
             }
         });
@@ -144,20 +144,20 @@ public class MickeyFrame extends JFrame {
         tb[0].setSelected(true);
 
         for (int i = 0; i < 2; i++) {
-            bgroup.add(tb[i]);
+            //bgroup.add(tb[i]);
         }
 
-        /*tb[0].addItemListener(new ItemListener() {
+        tb[0].addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 JRadioButton inputSide = (JRadioButton) e.getItem();
                 if(inputSide.isSelected()){
-                    tb[0].setSelected(true);
-                    tb[1].setSelected(false);
+                    tb[0].setSelected(true); //LEFT
+                    tb[1].setSelected(false); //RIGHT
                     mickeyLabel.turnLeft();
                 } else {
                     if(!tb[1].isSelected()) {
-                        //MickeyLeft = true;
+                        MickeyLeft = true;
                         mickeyLabel.turnLeft();
                         tb[0].setSelected(true);
                     }
@@ -169,18 +169,18 @@ public class MickeyFrame extends JFrame {
             public void itemStateChanged(ItemEvent e) {
                 JRadioButton inputSide = (JRadioButton) e.getItem();
                 if(inputSide.isSelected()){
-                    tb[0].setSelected(false);
-                    tb[1].setSelected(true);
+                    tb[0].setSelected(false); //LEFT
+                    tb[1].setSelected(true); //RIGHT
                     mickeyLabel.turnRight();
                 } else {
                     if(!tb[0].isSelected()) {
                         mickeyLabel.turnRight();
+                        MickeyLeft = false;
                         tb[1].setSelected(true);
                     }
                 }
             }
-        });*/
-
+        });
 
         // (6) Add ActionListener (anonymous class) to moreButton
         // - Create a new itemThread
@@ -228,6 +228,7 @@ public class MickeyFrame extends JFrame {
     ////////////////////////////////////////////////////////////////////////////
     public void setItemThread() {
         Thread itemThread = new Thread() {
+            
             public void run() {
                 // (7) Create a new ItemLabel, add it to drawpane
                 // - Keep updating its location
@@ -235,7 +236,7 @@ public class MickeyFrame extends JFrame {
                 // play hit sound and update score
                 // - Once reaching the bottom or colliding with Mickey,
                 // remove the item from drawpane and end this thread
- 
+                
             } // end run
         }; // end thread creation
         itemThread.start();
