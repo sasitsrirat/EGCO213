@@ -1,3 +1,4 @@
+
 /*
  * MR.SASIT SRIRAT 6413112
  * MR. 
@@ -53,8 +54,10 @@ public class MickeyFrame extends JFrame {
         addWindowListener(new WindowAdapter() {
         	public void windowClosing(WindowEvent e) {
         		themeSound.stop();
+                mickeyLabel.setWalk(false);
+                //itemLabel = new ItemLabel(currentFrame);
         		JOptionPane.showMessageDialog(new JFrame()," Total score = "+score , "Mickey Mouse",JOptionPane.INFORMATION_MESSAGE );
-        	}
+            }
         });
         contentpane = (JPanel) getContentPane();
         contentpane.setLayout(new BorderLayout());
@@ -271,6 +274,11 @@ public class MickeyFrame extends JFrame {
         score += hp;
         String s = Integer.toString(score);
         scoreText.setText(s);
+        ItemLabel I = new ItemLabel(currentFrame);
+        I.getHitPoints();
+        I.playHitSound();
+
+        
     }
 } // end outer class MickeyGame
 
@@ -356,7 +364,7 @@ class ItemLabel extends JLabel {
     // working variables - adjust the values as you want
     private int width = 50, height = 50;
     private int curX, curY = 0;
-    private int speed = 1000;
+    private int speed = 300;
 
     //Constructor
     public ItemLabel(MickeyFrame pf) {
