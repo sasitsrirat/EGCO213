@@ -1,7 +1,7 @@
 
 /*
- * MR.SASIT SRIRAT 6413112
- * MR. 
+* Mr. Sasit Srirat 6413112 EGCO
+* Mr. Watcharasak Prommanee 6413110 EGCO
  */
 
 package exercise8;
