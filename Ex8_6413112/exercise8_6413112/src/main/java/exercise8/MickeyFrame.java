@@ -233,10 +233,8 @@ public class MickeyFrame extends JFrame {
     ////////////////////////////////////////////////////////////////////////////
     public void setItemThread() {
         Thread itemThread = new Thread() {
-            Random r = new Random();
-            int itemCurX = r.nextInt(frameWidth);
-            int itemCurY = 50;
-            JLabel Label = new JLabel(itemLabel.itemImg);
+            int getScore;
+            ItemLabel Label = new ItemLabel(currentFrame);
             public void run() {
                 // (7) Create a new ItemLabel, add it to drawpane
                 // - Keep updating its location
@@ -244,21 +242,23 @@ public class MickeyFrame extends JFrame {
                 // play hit sound and update score
                 // - Once reaching the bottom or colliding with Mickey,
                 // remove the item from drawpane and end this threadz
-                while(itemCurY<=frameHeight)
-                    {
-                Label.setBounds(itemCurX,itemCurY,itemWidth,itemHeight);
+                while(true)
+                {
                 drawpane.add(Label);
-                itemCurY = itemCurY+50;
+                Label.updateLocation();
                 if(mickeyLabel.getBounds().intersects(Label.getBounds())) {
-                    itemCurY = 800;
-                    updateScore(score);
-                    }
-                if(itemCurY>=frameHeight-120){
+                    getScore = Label.getHitPoints();
+                    Label.playHitSound();
+                    updateScore(getScore);
                     drawpane.remove(Label);
+                    repaint();
+                    break;
+                    }
+                if(Label.getCurY()>=frameHeight-120){
+                    drawpane.remove(Label);
+                    repaint();
+                    break;
                 }
-                repaint();
-                try { Thread.sleep(itemSpeed); } 
-                catch (InterruptedException e) { e.printStackTrace(); }
             }
             } // end run
         }; // end thread creation
@@ -268,9 +268,9 @@ public class MickeyFrame extends JFrame {
     ////////////////////////////////////////////////////////////////////////////
     public void updateScore(int hp) {
         // (8) Score update must be synchronized since it can be done by >1 itemThreads
-         ItemLabel I = new ItemLabel(currentFrame);
-        I.playHitSound();
-        I.getHitPoints();
+        score += hp;
+        String s = Integer.toString(score);
+        scoreText.setText(s);
     }
 } // end outer class MickeyGame
 
@@ -356,18 +356,16 @@ class ItemLabel extends JLabel {
     // working variables - adjust the values as you want
     private int width = 50, height = 50;
     private int curX, curY = 0;
-    private int speed = 500;
+    private int speed = 1000;
 
     //Constructor
     public ItemLabel(MickeyFrame pf) {
         parentFrame = pf;
-
         curX = (int) (Math.random() * 5555) % (parentFrame.getWidth() - 100);
         if (curX % 2 == 0)
             type = 0;
         else
             type = 1;
-
         itemImg = new MyImageIcon(imageFiles[type]).resize(width, height);
         hitSound = new MySoundEffect(soundFiles[type]);
         setIcon(itemImg);
@@ -383,6 +381,23 @@ class ItemLabel extends JLabel {
             return -1;
         else
             return 1;
+    }
+    
+    public int getCurY() {
+        return curY;
+    }
+
+    public void updateLocation() {
+        if (curY < 600) {
+            curY = curY + 50;
+        }
+        setLocation(curX, curY);
+        repaint();
+        try {
+            Thread.sleep(speed);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 } // end class ItemLabel
