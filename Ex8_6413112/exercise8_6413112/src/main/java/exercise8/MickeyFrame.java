@@ -26,11 +26,12 @@ public class MickeyFrame extends JFrame {
 
     private MickeyLabel mickeyLabel;
     private MickeyFrame currentFrame;
+    private ItemLabel itemLabel; //add
 
     // working variables - adjust the values as you want
+    private int itemWidth  = 40,   itemHeight  = 50 ,itemSpeed   = 1000;
     private int frameWidth = 1200, frameHeight = 600;
     private int score;
-    
     private boolean MickeyLeft = true, MickeyMove = false;
 
     public static void main(String[] args) {
@@ -74,6 +75,10 @@ public class MickeyFrame extends JFrame {
 
         mickeyLabel = new MickeyLabel(currentFrame);
         drawpane.add(mickeyLabel);
+
+        //add
+        itemLabel = new ItemLabel(currentFrame);
+        //drawpane.add(itemLabel);
 
         // (2) Add ActionListener (anonymous class) to walkButton
         // - If Mickey isn't waking, create mickeyThread to make him walk
@@ -224,19 +229,37 @@ public class MickeyFrame extends JFrame {
         }; // end thread creation
         mickeyThread.start();
     }
-
+   
     ////////////////////////////////////////////////////////////////////////////
     public void setItemThread() {
         Thread itemThread = new Thread() {
-            
+            Random r = new Random();
+            int itemCurX = r.nextInt(frameWidth);
+            int itemCurY = 50;
+            JLabel Label = new JLabel(itemLabel.itemImg);
             public void run() {
                 // (7) Create a new ItemLabel, add it to drawpane
                 // - Keep updating its location
                 // - Check whether it collides with Mickey. If it does,
                 // play hit sound and update score
                 // - Once reaching the bottom or colliding with Mickey,
-                // remove the item from drawpane and end this thread
-                
+                // remove the item from drawpane and end this threadz
+                while(itemCurY<=frameHeight)
+                    {
+                Label.setBounds(itemCurX,itemCurY,itemWidth,itemHeight);
+                drawpane.add(Label);
+                itemCurY = itemCurY+50;
+                if(mickeyLabel.getBounds().intersects(Label.getBounds())) {
+                    itemCurY = 800;
+                    updateScore(score);
+                    }
+                if(itemCurY>=frameHeight-120){
+                    drawpane.remove(Label);
+                }
+                repaint();
+                try { Thread.sleep(itemSpeed); } 
+                catch (InterruptedException e) { e.printStackTrace(); }
+            }
             } // end run
         }; // end thread creation
         itemThread.start();
@@ -245,6 +268,9 @@ public class MickeyFrame extends JFrame {
     ////////////////////////////////////////////////////////////////////////////
     public void updateScore(int hp) {
         // (8) Score update must be synchronized since it can be done by >1 itemThreads
+         ItemLabel I = new ItemLabel(currentFrame);
+        I.playHitSound();
+        I.getHitPoints();
     }
 } // end outer class MickeyGame
 
@@ -317,21 +343,22 @@ class MickeyLabel extends JLabel {
 
 class ItemLabel extends JLabel {
     private int type; // 0 = bad item, 1 = good item
-    private MyImageIcon itemImg;
+    MyImageIcon itemImg; //original is public 
     private MySoundEffect hitSound;
     private MickeyFrame parentFrame;
 
-    private String[] imageFiles = { "src/main/java/Exercise8/resources/bomb.png",
-            "src/main/java/Exercise8/resources/burger.png" };
+    private String[] imageFiles = { "src/main/java/exercise8/resources/bomb.png",
+            "src/main/java/exercise8/resources/burger.png" };
 
-    private String[] soundFiles = { "src/main/java/Exercise8/resources/punch.wav",
-            "src/main/java/Exercise8/resources/coin.wav" };
+    private String[] soundFiles = { "src/main/java/exercise8/resources/punch.wav",
+            "src/main/java/exercise8/resources/coin.wav" };
 
     // working variables - adjust the values as you want
     private int width = 50, height = 50;
     private int curX, curY = 0;
     private int speed = 500;
 
+    //Constructor
     public ItemLabel(MickeyFrame pf) {
         parentFrame = pf;
 
